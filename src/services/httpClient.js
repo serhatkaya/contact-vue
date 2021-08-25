@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'http://localhost:3000/api/v1',
+    baseURL: 'https://localhost:5001/api/',
     timeout: 5000,
 });
 
@@ -15,7 +15,6 @@ instance.interceptors.request.use(
             };
             config.headers = headers;
         }
-        console.log('request sent');
         return config;
     },
     function(error) {
@@ -25,7 +24,6 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
     function(response) {
-        console.log('response get');
         return response;
     },
     function(error) {

@@ -30,9 +30,9 @@ export default {
                     icon: 'fa fa-user',
                 },
                 {
-                    label: 'about',
+                    label: 'Users',
                     key: 'about',
-                    link: '/about',
+                    link: '/users',
                     icon: 'fa fa-user',
                 },
             ],

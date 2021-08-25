@@ -1,23 +1,42 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/Home.vue';
+import Login from '@/components/auth/Login.vue';
+import Master from '@/components/Master.vue';
+import UserDetail from '@/views/User-detail.vue';
 
 const routes = [
     {
-        path: '/',
-        name: 'Home',
-        component: Home,
+        path: '',
+        component: Master,
+        children: [
+            {
+                path: '/home',
+                name: 'Home',
+                component: Home,
+                meta: {
+                    requiresAuth: true,
+                },
+            },
+            {
+                path: '/users',
+                name: 'Users',
+                component: () => import('../views/Users.vue'),
+                meta: {
+                    requiresAuth: true,
+                },
+            },
+            {
+                path: '/users/detail/:id',
+                props: true,
+                name: 'UserDetail',
+                component: UserDetail,
+            },
+        ],
     },
     {
-        path: '/about',
-        name: 'About',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () =>
-            import(/* webpackChunkName: "about" */ '../views/About.vue'),
-        meta: {
-            requiresAuth: true,
-        },
+        path: '/login',
+        name: 'login',
+        component: Login,
     },
 ];
 
@@ -25,18 +44,23 @@ const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes,
 });
+
 router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (isAuthenticated()) {
             next();
             return;
         }
-        next('/');
+        next('/login');
     }
     next();
 });
 
 function isAuthenticated() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser && currentUser.token) {
+        return true;
+    }
     return false;
 }
 

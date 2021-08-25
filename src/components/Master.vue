@@ -8,7 +8,7 @@
             aria-label="Search"
         />
         <ul class="navbar-nav px-3">
-            <li class="nav-item text-nowrap">
+            <li class="nav-item text-nowrap" v-on:click="logout()">
                 <a class="nav-link" href="#">Sign out</a>
             </li>
         </ul>
@@ -31,6 +31,7 @@
 
 <script>
 import Menu from '@/components/Menu.vue';
+import router from '@/router/index.js';
 export default {
     name: 'HelloWorld',
     props: {
@@ -38,6 +39,12 @@ export default {
     },
     components: {
         Menu,
+    },
+    methods: {
+        logout() {
+            localStorage.removeItem('currentUser');
+            router.push('/login');
+        },
     },
 };
 </script>
