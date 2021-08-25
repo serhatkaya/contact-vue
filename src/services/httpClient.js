@@ -3,6 +3,9 @@ import axios from 'axios';
 const instance = axios.create({
     baseURL: 'http://localhost:3000/api/v1',
     timeout: 5000,
+    headers: {
+        Authorization: 'Bearer asfaf    ',
+    },
 });
 
 instance.interceptors.request.use(
@@ -13,7 +16,7 @@ instance.interceptors.request.use(
     },
     function(error) {
         // Do something with request error
-        return Promise.reject(error);
+        return errorInterceptor(error);
     }
 );
 
@@ -23,8 +26,13 @@ instance.interceptors.response.use(
         return response;
     },
     function(error) {
-        return Promise.reject(error);
+        return errorInterceptor(error);
     }
 );
+
+function errorInterceptor(err) {
+    console.log('error interceptor');
+    return Promise.reject(err);
+}
 
 export default instance;
