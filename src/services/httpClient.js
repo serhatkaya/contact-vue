@@ -3,26 +3,29 @@ import axios from 'axios';
 const instance = axios.create({
     baseURL: 'http://localhost:3000/api/v1',
     timeout: 5000,
-    headers: {
-        Authorization: 'Bearer asfaf    ',
-    },
 });
 
 instance.interceptors.request.use(
     function(config) {
-        // Do something before request is sent
-        console.log('request send');
+        let headers = {};
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (currentUser) {
+            headers = {
+                Authorization: `Bearer ${currentUser.token}`,
+            };
+            config.headers = headers;
+        }
+        console.log('request sent');
         return config;
     },
     function(error) {
-        // Do something with request error
         return errorInterceptor(error);
     }
 );
 
 instance.interceptors.response.use(
     function(response) {
-        console.log('repsonse get');
+        console.log('response get');
         return response;
     },
     function(error) {
@@ -31,6 +34,7 @@ instance.interceptors.response.use(
 );
 
 function errorInterceptor(err) {
+    console.log(err);
     console.log('error interceptor');
     return Promise.reject(err);
 }
